@@ -13,5 +13,10 @@ void blockdrawSimple(unsigned char*, int, int, int, int, unsigned char**, int, i
 void blockdrawMirror(unsigned char*, int, int, int, int, unsigned char**, int, int);
 
 
+void blockinsert(unsigned char*, int, int, int, int, unsigned char*, int, int);
 
-void wavelet(unsigned char*, int, int);
+void wavelet(unsigned char*, int, int, int**);
+
+//int to unsigned char
+void binerizeItUC(int *, int, int, unsigned char **, int);
+

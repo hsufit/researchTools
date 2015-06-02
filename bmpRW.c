@@ -34,7 +34,7 @@ void bmpRFunc(char *fileN,struct bmpD **pointer)
 				fread(&(data->C.RY[i*data->Width+j]),1,1,f);
 			}
 //skip zero padding
-		fseek(f, 4-data->Width*3%4, SEEK_CUR);
+		fseek(f, (4-data->Width*3%4)%4, SEEK_CUR);
 		}
 	}
 	else
@@ -52,7 +52,7 @@ void bmpRFunc(char *fileN,struct bmpD **pointer)
 				fread(&(data->C.RY[i*data->Width+j]),1,1,f);
 			}
 //skip zero padding
-		fseek(f, 4-data->Width*3%4, SEEK_CUR);
+		fseek(f, (4-data->Width*3%4)%4, SEEK_CUR);
 		}
 	}
 
@@ -99,7 +99,7 @@ headerPrint(data);
 	        for(j=0;j<abs(data->Width);j++)
 				fwrite(&(data->C.RY[i*data->Width+j]),1,1,f);
 
-			for(j=0;j<4-data->Width*3%4;j++)
+			for(j=0;j<(4-data->Width*3%4)%4;j++)
 				fwrite(&tmp,1,1,f);
 		}
 	}
@@ -112,7 +112,7 @@ headerPrint(data);
 				fwrite(&(data->C.GU[i*data->Width+j]),1,1,f);
 		 		fwrite(&(data->C.RY[i*data->Width+j]),1,1,f);
 			}
-			for(j=0;j<4-data->Width*3%4;j++)
+			for(j=0;j<(4-data->Width*3%4)%4;j++)
 				fwrite(&tmp,1,1,f);
 		}
 unsigned char k=0x8c;
