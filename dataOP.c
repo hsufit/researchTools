@@ -125,5 +125,74 @@ void binerizeItUC(int *In, int Width, int Height, unsigned char**Out, int T)
 
 
 
+void colorRGBtYUV(struct charcontainer_3 *In, int Width, int Height);
+{
+	int i,j;
+	struct intcontainer_3 *block, *block2;
+
+	block = calloc(sizeof(struct intcontainer_3));
+	block->A=calloc(sizeof(int)*Width*Height);
+	block->B=calloc(sizeof(int)*Width*Height);
+	block->C=calloc(sizeof(int)*Width*Height);
+
+	for(i=0;i<Height;i++)
+		for(j=0;j<Width;j++)
+		{
+			block->A[i*Width+j]=(int)In->RY[i*Width+j];
+			block->B[i*Width+j]=(int)In->GU[i*Width+j];
+			block->C[i*Width+j]=(int)In->BV[i*Width+j];
+		}
+
+	for(i=0;i<Height;i++)
+		for(j=0;j<Width;j++)
+		{
+			block2->A[i*Width+j]=(block->A[i*Width+j]*299+block->B[i*Width+j]*587+block->C[i*Width+j]*114)/1000;
+			block2->B[i*Width+j]=(block->B[i*Width+j]-block2->A[i*Width+j])*492/1000+128;
+			block2->C[i*Width+j]=(block->C[i*Width+j]-block2->A[i*Width+j])*877/1000+128;
+		}
+
+	for(i=0;i<Height;i++)
+		for(j=0;j<Width;j++)
+		{
+			In->RY[i*Width+j]=(unsigned char)block2->A[i*Width+j];
+			In->GU[i*Width+j]=(unsigned char)block2->B[i*Width+j];
+			In->BV[i*Width+j]=(unsigned char)block2->C[i*Width+j];
+		}
+	free(block);
+	free(block2);
+
+}
+
+
+void avgFilter(unsigned char *Img, int Width, intHeight, int N)
+{
+	int i,j,k,l;
+	int tmp;
+	char *block;
+
+	block = malloc(sizeof(char)*N*N);
+
+	for(i=0;i<Height;i++)
+		for(j=0;j<Width;j++)
+		{
+			blockdrawMirror(Img,Width,Height,j-N/2,i-N/2,block,N,N);
+
+			tmp = 0;
+			for(k=0;k<N;k++)
+				for(l=0;l<N;l++)
+					tmp+=block[k*N+l];
+
+			Img[i*Width+j] = tmp/(N*N);
+		}
+	free(block);
+}
+
+
+
+
+
+
+
+
 
 
