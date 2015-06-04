@@ -113,7 +113,9 @@ void binerizeItUC(int *In, int Width, int Height, unsigned char**Out, int T)
 	Oblock = malloc(sizeof(int)*Width*Height);
 	for(i=0;i<Height;i++)
 		for(j=0;j<Width;j++)
-			if(Iblock[i*Width+j]>T)
+			if(T==256)
+				Oblock[i*Width+j] = Iblock[i*Width+j];
+			else if(Iblock[i*Width+j]>T)
 				Oblock[i*Width+j] = 255;
 			else
 				Oblock[i*Width+j]=0;
@@ -125,15 +127,42 @@ void binerizeItUC(int *In, int Width, int Height, unsigned char**Out, int T)
 
 
 
-void colorRGBtYUV(struct charcontainer_3 *In, int Width, int Height);
+void binerizeUCtUC(unsigned char *Iblock, int Width, int Height, unsigned char **Out, int T)
+{
+	int i,j;
+
+	unsigned char *Oblock;
+
+	Oblock = malloc(sizeof(int)*Width*Height);
+	for(i=0;i<Height;i++)
+		for(j=0;j<Width;j++)
+			if(T==256)
+				Oblock[i*Width+j] = Iblock[i*Width+j];
+			else if(Iblock[i*Width+j]>T)
+				Oblock[i*Width+j] = 255;
+			else
+				Oblock[i*Width+j]=0;
+
+	*Out = Oblock;
+
+}
+
+
+
+void colorRGBtYUV(struct charcontainer_3 *In, int Width, int Height)
 {
 	int i,j;
 	struct intcontainer_3 *block, *block2;
 
-	block = calloc(sizeof(struct intcontainer_3));
-	block->A=calloc(sizeof(int)*Width*Height);
-	block->B=calloc(sizeof(int)*Width*Height);
-	block->C=calloc(sizeof(int)*Width*Height);
+	block = malloc(sizeof(struct intcontainer_3));
+	block->A=malloc(sizeof(int)*Width*Height);
+	block->B=malloc(sizeof(int)*Width*Height);
+	block->C=malloc(sizeof(int)*Width*Height);
+
+	block2 = malloc(sizeof(struct intcontainer_3));
+	block2->A=malloc(sizeof(int)*Width*Height);
+	block2->B=malloc(sizeof(int)*Width*Height);
+	block2->C=malloc(sizeof(int)*Width*Height);
 
 	for(i=0;i<Height;i++)
 		for(j=0;j<Width;j++)
@@ -158,33 +187,37 @@ void colorRGBtYUV(struct charcontainer_3 *In, int Width, int Height);
 			In->GU[i*Width+j]=(unsigned char)block2->B[i*Width+j];
 			In->BV[i*Width+j]=(unsigned char)block2->C[i*Width+j];
 		}
+
+	free(block->A);
+	free(block->B);
+	free(block->C);
 	free(block);
+	free(block2->A);
+	free(block2->B);
+	free(block2->C);
 	free(block2);
 
 }
 
 
-void avgFilter(unsigned char *Img, int Width, intHeight, int N)
+void avgFilter(unsigned char *Img, int Width, int Height, int N)
 {
 	int i,j,k,l;
 	int tmp;
-	char *block;
-
-	block = malloc(sizeof(char)*N*N);
+	unsigned char *block;
 
 	for(i=0;i<Height;i++)
 		for(j=0;j<Width;j++)
 		{
-			blockdrawMirror(Img,Width,Height,j-N/2,i-N/2,block,N,N);
-
+			blockdrawMirror(Img,Width,Height,j-N/2,i-N/2,&block,N,N);
 			tmp = 0;
 			for(k=0;k<N;k++)
 				for(l=0;l<N;l++)
 					tmp+=block[k*N+l];
 
 			Img[i*Width+j] = tmp/(N*N);
-		}
 	free(block);
+		}
 }
 
 

@@ -26,6 +26,7 @@ void wavelet(unsigned char*, int, int, int**);
 
 //int to unsigned char
 void binerizeItUC(int *, int, int, unsigned char **, int);
+void binerizeUCtUC(unsigned char *, int, int, unsigned char **, int);
 
 void colorRGBtYUV(struct charcontainer_3 *, int, int);
 
